@@ -1,0 +1,73 @@
+unit ReportConnection;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, FireDAC.Comp.UI, FireDAC.Phys.IBBase, frxSmartMemo,
+  frxClass, frxDBSet, frCoreClasses;
+
+type
+  TDataModule1 = class(TDataModule)
+    FDConnection1: TFDConnection;
+    FDPhysFBDriverLink1: TFDPhysFBDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDQuery1: TFDQuery;
+    frxReport1: TfrxReport;
+    frxDBDataset1: TfrxDBDataset;
+    procedure onBeforePrintCpf(Sender: TfrxReportComponent);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DataModule1: TDataModule1;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TDataModule1.onBeforePrintCpf(Sender: TfrxReportComponent);
+var
+  cpfRaw: String;
+  frxMemo: TfrxMemoView;
+begin
+  if Sender is TfrxMemoView then
+  begin
+    frxMemo := Sender as TfrxMemoView;
+
+    cpfRaw := FDQuery1.FieldByName('CPF').AsString;
+    cpfRaw := StringReplace(cpfRaw, '.', '', [rfReplaceAll]);
+    cpfRaw := StringReplace(cpfRaw, '-', '', [rfReplaceAll]);
+    cpfRaw := StringReplace(cpfRaw, '/', '', [rfReplaceAll]);
+
+    while Length(cpfRaw) < 11 do
+      cpfRaw := '0' + cpfRaw;
+
+    if Length(cpfRaw) > 11 then
+      cpfRaw := Copy(cpfRaw, 1, 11);
+
+    if Length(cpfRaw) = 11 then
+    begin
+      frxMemo.Text := Format('%.3s.%.3s.%.3s-%.2s',
+                             [Copy(cpfRaw, 1, 3),
+                              Copy(cpfRaw, 4, 3),
+                              Copy(cpfRaw, 7, 3),
+                              Copy(cpfRaw, 10, 2)]);
+    end
+    else
+    begin
+      frxMemo.Text := cpfRaw;
+    end;
+  end;
+end;
+
+end.

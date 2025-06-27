@@ -1,0 +1,18 @@
+program Projeto;
+
+uses
+  Vcl.Forms,
+  UFirebirdConnection in '..\Firebird\Config\UFirebirdConnection.pas',
+  UClienteEntity in '..\Entities\UClienteEntity.pas',
+  UClienteInterface in '..\Interfaces\UClienteInterface.pas',
+  UClienteRepository in '..\Repositories\UClienteRepository.pas',
+  UMenuPrincipal in '..\UI\Home\UMenuPrincipal.pas' {Form1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

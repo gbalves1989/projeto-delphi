@@ -1,0 +1,22 @@
+unit UClienteInterface;
+
+interface
+
+uses
+  UClienteEntity, System.Generics.Collections;
+
+type
+  IClienteInterface = interface
+    ['{E1D8B4C9-F0E8-4E7B-B9A9-3A0B1C2D3E4F}']
+    //function GetAll: TList<TClienteEntity>;
+    function GetAllByCpf: TList<TClienteEntity>;
+    //function GetById(AID: Integer): TClienteEntity;
+    function GetCpfByCliente(ACpf: string): Integer;
+    procedure Add(ACliente: TClienteEntity);
+    procedure Update(ACliente: TClienteEntity);
+    //procedure Delete(AID: Integer);
+  end;
+
+implementation
+
+end.

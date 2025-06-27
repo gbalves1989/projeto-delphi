@@ -1,0 +1,137 @@
+unit UClienteEntity;
+
+interface
+
+uses
+  System.SysUtils, UMessageUtils;
+
+type
+  TClienteEntity = class
+  private
+    FID: Integer;
+    FNome: string;
+    FCpf: string;
+    FEndereco: string;
+    FCidade: string;
+    FEstado: string;
+
+  public
+    property ID: Integer read FID write FID;
+    property Nome: string read FNome write FNome;
+    property Cpf: string read FCpf write FCpf;
+    property Endereco: string read FEndereco write FEndereco;
+    property Cidade: string read FCidade write FCidade;
+    property Estado: string read FEstado write FEstado;
+
+    constructor Create;
+    destructor Destroy; override;
+
+    function fValidaCpf(const ACpf: string): Boolean;
+    function fReplaceCpf(const ACpf: string): string;
+    function fFormatCpf(const ACpf: string): string;
+    procedure pValidaCampos(const ANome: string; const AEndereco: string; const ACidade: string);
+  end;
+
+implementation
+
+{ TCustomer }
+
+constructor TClienteEntity.Create;
+begin
+  // Inicialização opcional
+end;
+
+destructor TClienteEntity.Destroy;
+begin
+  // Liberação de recursos, se houver
+  inherited;
+end;
+
+function TClienteEntity.fValidaCpf(const ACpf: string): Boolean;
+var
+  I, Sum, Rem: Integer;
+  S: string;
+begin
+  S := ACpf.Replace('.', '').Replace('-', '');
+
+  if Length(S) <> 11 then
+    Exit(False);
+
+  if (S = '00000000000') or (S = '11111111111') or (S = '22222222222') or
+     (S = '33333333333') or (S = '44444444444') or (S = '55555555555') or
+     (S = '66666666666') or (S = '77777777777') or (S = '88888888888') or
+     (S = '99999999999') then
+    Exit(False);
+
+  Sum := 0;
+  for I := 1 to 9 do
+    Sum := Sum + StrToInt(S[I]) * (11 - I);
+  Rem := (Sum * 10) mod 11;
+  if (Rem = 10) or (Rem = 11) then
+    Rem := 0;
+  if Rem <> StrToInt(S[10]) then
+    Exit(False);
+
+  Sum := 0;
+  for I := 1 to 10 do
+    Sum := Sum + StrToInt(S[I]) * (12 - I);
+  Rem := (Sum * 10) mod 11;
+  if (Rem = 10) or (Rem = 11) then
+    Rem := 0;
+  if Rem <> StrToInt(S[11]) then
+    Exit(False);
+
+  Result := True;
+end;
+
+function TClienteEntity.fReplaceCpf(const ACpf: string): string;
+begin
+  Result := ACpf.Replace('.', '').Replace('-', '');
+end;
+
+function TClienteEntity.fFormatCPF(const ACpf: string): string;
+var
+  LStrippedCpf: string;
+begin
+  LStrippedCpf := '';
+  for var I := 1 to Length(ACpf) do
+  begin
+    if CharInSet(ACpf[I], ['0'..'9']) then
+      LStrippedCpf := LStrippedCpf + ACpf[I];
+  end;
+
+  if Length(LStrippedCpf) = 11 then
+  begin
+    Result := Copy(LStrippedCpf, 1, 3) + '.' +
+              Copy(LStrippedCpf, 4, 3) + '.' +
+              Copy(LStrippedCpf, 7, 3) + '-' +
+              Copy(LStrippedCpf, 10, 2);
+  end
+  else
+  begin
+    Result := ACpf;
+  end;
+end;
+
+procedure TClienteEntity.pValidaCampos(const ANome: string; const AEndereco: string; const ACidade: string);
+begin
+  if ANome = '' then
+  begin
+    ShowMessageError('Nome deve ser informado!');
+    Exit;
+  end;
+
+  if AEndereco = '' then
+  begin
+    ShowMessageError('Endereço deve ser informado!');
+    Exit;
+  end;
+
+  if ACidade = '' then
+  begin
+    ShowMessageError('Cidade deve ser informada!');
+    Exit;
+  end;
+end;
+
+end.

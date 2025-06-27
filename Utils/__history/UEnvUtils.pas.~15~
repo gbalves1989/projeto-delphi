@@ -1,0 +1,90 @@
+﻿unit UEnvUtils;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, System.IOUtils, System.Types,
+  System.StrUtils;
+
+type
+  TEnvManager = class
+  private
+    FEnvVars: TStringList;
+    function GetEnvVar(const AName: string): string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure LoadEnvFile(const AFilePath: string);
+    property EnvVar[const AName: string]: string read GetEnvVar;
+  end;
+
+var
+  EnvManager: TEnvManager;
+
+implementation
+
+constructor TEnvManager.Create;
+begin
+  inherited;
+  FEnvVars := TStringList.Create;
+end;
+
+destructor TEnvManager.Destroy;
+begin
+  FEnvVars.Free;
+  inherited;
+end;
+
+procedure TEnvManager.LoadEnvFile(const AFilePath: string);
+var
+  LFileContent: TStringList;
+  LLine: string;
+  LSplit: TStringDynArray;
+  LTrimmedLine: string;
+begin
+  if not TFile.Exists(AFilePath) then
+    raise Exception.CreateFmt('Arquivo .env n�o encontrado: %s', [AFilePath]);
+
+  FEnvVars.Clear;
+  LFileContent := TStringList.Create;
+  try
+    LFileContent.LoadFromFile(AFilePath, TEncoding.UTF8);
+    for LLine in LFileContent do
+    begin
+      LTrimmedLine := Trim(LLine);
+      if (LTrimmedLine <> '') and (not LTrimmedLine.StartsWith('#')) then
+      begin
+        LSplit := LTrimmedLine.Split(['=']);
+        if Length(LSplit) >= 2 then
+          FEnvVars.Add(LSplit[0].Trim + '=' + LSplit[1].Trim);
+      end;
+    end;
+  finally
+    LFileContent.Free;
+  end;
+end;
+
+function TEnvManager.GetEnvVar(const AName: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 0 to FEnvVars.Count - 1 do
+  begin
+    if StartsText(AName + '=', FEnvVars[I]) then
+    begin
+      Result := Copy(FEnvVars[I], Length(AName) + 2, MaxInt);
+      Exit;
+    end;
+  end;
+end;
+
+initialization
+  EnvManager := TEnvManager.Create;
+  EnvManager.LoadEnvFile(TPath.Combine(TPath.GetDirectoryName(ParamStr(0)), '..', '.env', 'dev.env'));
+
+finalization
+  EnvManager.Free;
+
+end.
+

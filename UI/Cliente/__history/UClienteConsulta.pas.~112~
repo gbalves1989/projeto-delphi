@@ -1,0 +1,239 @@
+unit UClienteConsulta;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, Vcl.Mask, Vcl.Grids, UClienteInterface, UClienteRepository,
+  UClienteEntity, System.Generics.Collections, UMessageUtils, UClienteCadastro,
+  Printers, Vcl.ExtDlgs, SynCommons, frxClass, frxExportPDF, frxSmartMemo,
+  frCoreClasses, frxDBSet, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  FireDAC.Phys.IBBase, FireDAC.Comp.UI, ReportConnection;
+
+type
+  TFClienteConsulta = class(TForm)
+    GroupBox1: TGroupBox;
+    LFiltro: TLabel;
+    CBFiltro: TComboBox;
+    LCpf: TLabel;
+    MECpf: TMaskEdit;
+    LNome: TLabel;
+    ENome: TEdit;
+    BPesquisar: TButton;
+    SGClientes: TStringGrid;
+    BImprimir: TButton;
+    procedure onFormDestroy(Sender: TObject);
+    procedure BPesquisarClick(Sender: TObject);
+    procedure onCreate(Sender: TObject);
+    procedure onDblClickEditar(Sender: TObject);
+    procedure BImprimirClick(Sender: TObject);
+    procedure FDPhysFBDriverLink1DriverCreated(Sender: TObject);
+  private
+    { Private declarations }
+    FClienteRepository: IClienteInterface;
+    procedure ClearAndSetupStringGrid;
+    procedure PopulateStringGrid(AList: TList<TClienteEntity>);
+  public
+    { Public declarations }
+  end;
+
+var
+  FClienteConsulta: TFClienteConsulta;
+
+implementation
+
+{$R *.dfm}
+
+// Responsável por limpar e configurar a Grid
+procedure TFClienteConsulta.ClearAndSetupStringGrid;
+begin
+  SGClientes.FixedRows := 1;
+  SGClientes.RowCount := SGClientes.FixedRows + 1;
+  SGClientes.ColCount := 3;
+  SGClientes.FixedCols := 0;
+
+  SGClientes.Cells[0, 0] := 'ID';
+  SGClientes.Cells[1, 0] := 'NOME';
+  SGClientes.Cells[2, 0] := 'CPF';
+
+  SGClientes.ColWidths[0] := 50;
+  SGClientes.ColWidths[1] := 150;
+  SGClientes.ColWidths[2] := 100;
+end;
+
+procedure TFClienteConsulta.FDPhysFBDriverLink1DriverCreated(Sender: TObject);
+begin
+
+end;
+
+// Responsável por popular a grid com base na seleção de pesquisa
+procedure TFClienteConsulta.PopulateStringGrid(AList: TList<TClienteEntity>);
+var
+  i: Integer;
+  LCliente: TClienteEntity;
+begin
+  SGClientes.RowCount := AList.Count + 1;
+
+  for i := 0 to AList.Count - 1 do
+  begin
+    LCliente := AList[i];
+    SGClientes.Cells[0, i + 1] := LCliente.ID.ToString;
+    SGClientes.Cells[1, i + 1] := LCliente.Nome;
+    SGClientes.Cells[2, i + 1] := LCliente.fFormatCpf(LCliente.Cpf);
+  end;
+end;
+
+procedure TFClienteConsulta.onFormDestroy(Sender: TObject);
+begin
+  FClienteRepository := nil;
+end;
+
+procedure TFClienteConsulta.onCreate(Sender: TObject);
+begin
+  FClienteRepository := TClienteRepository.Create;
+
+  CBFiltro.Items.Add('CPF');
+  CBFiltro.Items.Add('NOME');
+  CBFiltro.ItemIndex := -1;
+
+  ClearAndSetupStringGrid;
+end;
+
+// Responsável por abrir a tela de edição conforme seleção na grid
+procedure TFClienteConsulta.onDblClickEditar(Sender: TObject);
+var
+  LClientID: Integer;
+  LCliente: TClienteEntity;
+begin
+  if SGClientes.Row > 0 then
+  begin
+    try
+      LClientID := StrToInt(SGClientes.Cells[0, SGClientes.Row]);
+      LCliente := FClienteRepository.GetById(LClientID);
+
+      if Assigned(LCliente) then
+      begin
+        if not Assigned(FClienteCadastro) then
+          Application.CreateForm(TFClienteCadastro, FClienteCadastro);
+
+        FClienteCadastro.LoadClient(LCliente);
+        FClienteCadastro.ShowModal;
+
+        BPesquisarClick(nil);
+      end
+      else
+      begin
+        ShowMessageError('Cliente não encontrado para o ID selecionado.');
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessageError('Erro ao carregar cliente: ' + E.Message);
+      end;
+    end;
+  end;
+end;
+
+// Responsável por executar a pesquisa conforme a seleção
+procedure TFClienteConsulta.BImprimirClick(Sender: TObject);
+var
+  LCliente: TClienteEntity;
+begin
+  DataModule1 := TDataModule1.Create(Self);
+
+  try
+    if CBFiltro.Text = 'CPF' then
+    begin
+      DataModule1.FDQuery1.Close;
+      DataModule1.FDQuery1.SQL.Text := 'SELECT ID, NOME, ' +
+            'SUBSTRING(CPF FROM 1 FOR 3) || ''.'' || ' +
+            'SUBSTRING(CPF FROM 4 FOR 3) || ''.'' || ' +
+            'SUBSTRING(CPF FROM 7 FOR 3) || ''-'' || ' +
+            'SUBSTRING(CPF FROM 10 FOR 2) AS FORMATTED_CPF, ENDERECO, CIDADE, ESTADO ' +
+            'FROM CLIENTES WHERE CPF = ' + LCliente.fReplaceCpf(MECpf.Text);
+      //DataModule1.FDQuery1.ParamByName('CPF').AsString := LCliente.fReplaceCpf(MECpf.Text);
+      DataModule1.FDQuery1.Open;
+    end
+    else if CBFiltro.Text = 'NOME' then
+    begin
+      DataModule1.FDQuery1.Close;
+      DataModule1.FDQuery1.SQL.Text := 'SELECT * FROM CLIENTES WHERE NOME LIKE :NOME';
+      DataModule1.FDQuery1.ParamByName('NOME').AsString := '%' + ENome.Text + '%';
+      DataModule1.FDQuery1.Open;
+    end;
+
+    DataModule1.frxDBDataset1.DataSet := DataModule1.FDQuery1;
+    DataModule1.frxReport1.PrepareReport;
+    DataModule1.frxReport1.ShowReport;
+  finally
+    DataModule1.Free;
+    DataModule1 := nil;
+  end;
+end;
+
+procedure TFClienteConsulta.BPesquisarClick(Sender: TObject);
+var
+  LCliente: TClienteEntity;
+  LClientes: TList<TClienteEntity>;
+  LCPF: string;
+begin
+  ClearAndSetupStringGrid;
+  LClientes := nil;
+  LCliente := nil;
+
+  try
+    if CBFiltro.Text = 'CPF' then
+    begin
+      if not LCliente.fValidaCpf(MECpf.Text) then
+      begin
+        ShowMessageError('CPF informado é inválido!');
+        Exit;
+      end;
+
+      if MECpf.Text = '' then
+      begin
+        ShowMessageError('Por favor, digite um CPF para pesquisar!');
+        Exit;
+      end;
+
+      LCPF := LCliente.fReplaceCpf(MECpf.Text);
+      LClientes := FClienteRepository.GetByCpf(LCPF);
+    end
+    else if CBFiltro.Text = 'NOME' then
+    begin
+      if ENome.Text = '' then
+      begin
+        ShowMessageError('Nome deve ser informado!');
+        Exit;
+      end;
+
+      LClientes := FClienteRepository.GetAllByNome(ENome.Text);
+    end
+    else if CBFiltro.Text = '' then
+    begin
+      LClientes := FClienteRepository.GetAll();
+    end;
+
+    if Assigned(LClientes) and (LClientes.Count > 0) then
+    begin
+      PopulateStringGrid(LClientes);
+    end
+    else if Assigned(LClientes) and (LClientes.Count = 0) then
+    begin
+      ShowMessageInfo('Nenhum cliente encontrado com os critérios informados!');
+    end;
+  finally
+    if Assigned(LClientes) then
+    begin
+      LCliente.Free;
+      LClientes.Free;
+    end;
+  end;
+end;
+
+end.

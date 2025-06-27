@@ -1,0 +1,107 @@
+unit UClienteEntity;
+
+interface
+
+uses
+  System.SysUtils, UMessageUtils;
+
+type
+  TClienteEntity = class
+  private
+    FID: Integer;
+    FNome: string;
+    FCpf: string;
+    FEndereco: string;
+    FCidade: string;
+    FEstado: string;
+
+  public
+    property ID: Integer read FID write FID;
+    property Nome: string read FNome write FNome;
+    property Cpf: string read FCpf write FCpf;
+    property Endereco: string read FEndereco write FEndereco;
+    property Cidade: string read FCidade write FCidade;
+    property Estado: string read FEstado write FEstado;
+
+    constructor Create;
+    destructor Destroy; override;
+
+    function fValidaCpf(const ACpf: string): Boolean;
+    procedure pReplaceCpf(const ACpf: string);
+    procedure pValidaCampos(const ANome: string; const AEndereco: string; const ACidade: string);
+  end;
+
+implementation
+
+{ TCustomer }
+
+constructor TClienteEntity.Create;
+begin
+  // Inicialização opcional
+end;
+
+destructor TClienteEntity.Destroy;
+begin
+  // Liberação de recursos, se houver
+  inherited;
+end;
+
+function TClienteEntity.fValidaCpf(const ACpf: string): Boolean;
+var
+  I, Sum, Rem: Integer;
+  S: string;
+begin
+  S := ACpf.Replace('.', '').Replace('-', '');
+
+  if Length(S) <> 11 then
+    Exit(False);
+
+  if (S = '00000000000') or (S = '11111111111') or (S = '22222222222') or
+     (S = '33333333333') or (S = '44444444444') or (S = '55555555555') or
+     (S = '66666666666') or (S = '77777777777') or (S = '88888888888') or
+     (S = '99999999999') then
+    Exit(False);
+
+  Sum := 0;
+  for I := 1 to 9 do
+    Sum := Sum + StrToInt(S[I]) * (11 - I);
+  Rem := (Sum * 10) mod 11;
+  if (Rem = 10) or (Rem = 11) then
+    Rem := 0;
+  if Rem <> StrToInt(S[10]) then
+    Exit(False);
+
+  Sum := 0;
+  for I := 1 to 10 do
+    Sum := Sum + StrToInt(S[I]) * (12 - I);
+  Rem := (Sum * 10) mod 11;
+  if (Rem = 10) or (Rem = 11) then
+    Rem := 0;
+  if Rem <> StrToInt(S[11]) then
+    Exit(False);
+
+  Result := True;
+end;
+
+procedure TClienteEntity.pReplaceCpf(const ACpf: string);
+begin
+  FCpf := ACpf.Replace('.', '').Replace('-', '');
+end;
+
+procedure TClienteEntity.pValidaCampos(const ANome: string; const AEndereco: string; const ACidade: string);
+begin
+  if ANome = '' then
+  begin
+    ShowMessageError('Nome deve ser informado!');
+    Exit;
+  end;
+
+  if AEndereco = '' then
+  begin
+    ShowMessageError('Endereço deve ser informado!');
+    Exit;
+  end;
+
+end;
+
+end.

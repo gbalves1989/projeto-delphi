@@ -1,0 +1,43 @@
+unit UMenuPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus,
+  UClienteCadastro, UClienteConsulta;
+
+type
+  TFMenuPrincipal = class(TForm)
+    MMPrincipal: TMainMenu;
+    Cadastro: TMenuItem;
+    NovoCliente: TMenuItem;
+    Consulta: TMenuItem;
+    ListadeClientes: TMenuItem;
+    procedure onClickCadastroCliente(Sender: TObject);
+    procedure onClickConsultaCliente(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FMenuPrincipal: TFMenuPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFMenuPrincipal.onClickCadastroCliente(Sender: TObject);
+begin
+  FClienteCadastro.Show;
+end;
+
+procedure TFMenuPrincipal.onClickConsultaCliente(Sender: TObject);
+begin
+  FClienteConsulta.Show;
+end;
+
+end.

@@ -1,0 +1,35 @@
+object FMenuPrincipal: TFMenuPrincipal
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  Caption = 'Sistema de Clientes'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Menu = MMPrincipal
+  WindowState = wsMaximized
+  TextHeight = 15
+  object MMPrincipal: TMainMenu
+    Left = 584
+    Top = 400
+    object Cadastro: TMenuItem
+      Caption = 'Cadastro'
+      object NovoCliente: TMenuItem
+        Caption = 'Novo Cliente'
+        OnClick = onClickCadastroCliente
+      end
+    end
+    object Consulta: TMenuItem
+      Caption = 'Consulta'
+      object ListadeClientes: TMenuItem
+        Caption = 'Lista de Clientes'
+        OnClick = onClickConsultaCliente
+      end
+    end
+  end
+end

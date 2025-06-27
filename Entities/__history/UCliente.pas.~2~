@@ -1,0 +1,18 @@
+unit UCliente;
+
+interface
+
+type
+  TClienteEntity = class
+  public
+    ID: Integer;
+    Nome: string;
+    Cpf: string;
+    Endereco: string;
+    Cidade: string;
+    Estado: string;
+  end;
+
+implementation
+
+end.

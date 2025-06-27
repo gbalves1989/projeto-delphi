@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/06/24 14:49:29.000.863,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 14:49:50.000.404,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Projeto.dproj=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2025/06/24 14:56:02.000.542,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 14:56:27.000.288,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Firebird\Config\UFirebirdConnection.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:05:19.000.220,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:05:32.000.611,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Entities\UCliente.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:07:23.000.456,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:07:53.000.050,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Interfaces\UClienteInterface.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:08:49.000.720,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Entities\UClienteEntity.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Entities\UCliente.pas</Transaction>
+    <Transaction>2025/06/24 15:20:58.000.308,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:21:16.000.691,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Repositories\UClienteRepository.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:47:22.000.516,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:47:42.000.920,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Home\UMenuPrincipal.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:47:42.000.920,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Home\UMenuPrincipal.dfm=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.dfm</Transaction>
+    <Transaction>2025/06/24 15:51:16.000.023,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit2.pas</Transaction>
+    <Transaction>2025/06/24 15:51:38.000.581,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Cliente\UClienteCadastro.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit2.pas</Transaction>
+    <Transaction>2025/06/24 15:51:38.000.581,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Cliente\UClienteCadastro.dfm=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit2.dfm</Transaction>
+    <Transaction>2025/06/24 15:55:46.000.697,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 15:56:07.000.369,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Cliente\UClienteConsulta.dfm=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.dfm</Transaction>
+    <Transaction>2025/06/24 15:56:07.000.369,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\UI\Cliente\UClienteConsulta.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 19:42:40.000.269,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 21:34:46.000.455,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/24 21:45:09.000.515,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Utils\UMessageUtils.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/25 13:40:31.000.580,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/25 13:41:09.000.598,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Utils\UEnvUtils.pas</Transaction>
+    <Transaction>2025/06/25 14:38:52.000.844,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Utils\UEnvUtils.pas=</Transaction>
+    <Transaction>2025/06/25 14:41:22.000.992,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/25 14:41:41.000.763,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Utils\UEnvUtils.pas</Transaction>
+    <Transaction>2025/06/25 14:43:12.000.896,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Utils\UEnvUtils.pas=</Transaction>
+    <Transaction>2025/06/27 12:03:43.270,=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+    <Transaction>2025/06/27 12:06:11.244,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Firebird\ReportConnection.dfm=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.dfm</Transaction>
+    <Transaction>2025/06/27 12:06:11.244,C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Firebird\ReportConnection.pas=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Application\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

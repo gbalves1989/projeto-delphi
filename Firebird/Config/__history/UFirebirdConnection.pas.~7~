@@ -1,0 +1,58 @@
+unit UFirebirdConnection;
+
+interface
+
+uses
+  Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait,
+  FireDAC.Comp.Client, System.SysUtils;
+
+type
+  TDataBaseConnection = class
+  private
+    FConnection: TFDConnection;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GetConnection: TFDConnection;
+  end;
+
+implementation
+
+{ TDataBaseConnection }
+
+constructor TDataBaseConnection.Create;
+begin
+  FConnection := TFDConnection.Create(nil);
+  FConnection.DriverName := 'InterBase';
+  FConnection.Params.Add('Database=C:\Users\gbalv\OneDrive\Documentos\Embarcadero\Studio\Projects\projeto\Firebird\Database\CLIENTESDB.FDB');
+  FConnection.Params.Add('User_Name=SYSDBA');
+  FConnection.Params.Add('Password=masterkey');
+  FConnection.LoginPrompt := False;
+  try
+    FConnection.Open;
+  except
+    on E: Exception do
+    begin
+      raise Exception.Create('Erro ao conectar ao banco de dados: ' + E.Message);
+    end;
+  end;
+end;
+
+destructor TDataBaseConnection.Destroy;
+begin
+  if Assigned(FConnection) then
+  begin
+    if FConnection.Connected then
+      FConnection.Close;
+    FConnection.Free;
+  end;
+  inherited;
+end;
+
+function TDataBaseConnection.GetConnection: TFDConnection;
+begin
+  Result := FConnection;
+end;
+
+end.

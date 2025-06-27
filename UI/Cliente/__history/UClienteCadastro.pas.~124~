@@ -1,0 +1,222 @@
+unit UClienteCadastro;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, UClienteEntity, UClienteInterface, UClienteRepository,
+  UMessageUtils, Vcl.Mask;
+
+type
+  TFClienteCadastro = class(TForm)
+    LCodigo: TLabel;
+    ECodigo: TEdit;
+    LNome: TLabel;
+    ENome: TEdit;
+    LCpf: TLabel;
+    MECpf: TMaskEdit;
+    LEndereco: TLabel;
+    EEndereco: TEdit;
+    LUf: TLabel;
+    CBUf: TComboBox;
+    ECidade: TEdit;
+    BSalvar: TButton;
+    BExcluir: TButton;
+    ECpfBlocked: TEdit;
+    procedure onFormCreate(Sender: TObject);
+    procedure onFormDestroy(Sender: TObject);
+    procedure onClickSalvar(Sender: TObject);
+    procedure pClearFields;
+    procedure BExcluirClick(Sender: TObject);
+  private
+    { Private declarations }
+    FClienteRepository: IClienteInterface;
+  public
+    { Public declarations }
+    procedure LoadClient(ACliente: TClienteEntity);
+  end;
+
+var
+  FClienteCadastro: TFClienteCadastro;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFClienteCadastro.pClearFields;
+begin
+  ECodigo.Text := '0';
+  ENome.Text := '';
+  MECpf.Text := '';
+  EEndereco.Text := '';
+  CBUf.ItemIndex := 0;
+  ECidade.Text := '';
+end;
+
+//Responsável por verificar se um objeto cliente válido foi fornecido
+procedure TFClienteCadastro.BExcluirClick(Sender: TObject);
+var
+  DialogResult: TModalResult;
+begin
+  try
+    DialogResult := MessageDlg(
+      'Tem certeza que deseja remover o cliente?',
+      mtConfirmation,
+      [mbYes, mbNo],
+      0
+    );
+
+    if DialogResult = mrYes then
+    begin
+      FClienteRepository.Delete(vtInteger.parse(ECodigo.Text));
+      ShowMessageInfo('Cliente removido com sucesso com sucesso!');
+    end
+    else
+    begin
+      ShowMessageInfo('Processo de remoção foi cancelado!');
+    end;
+  finally
+    pClearFields;
+    ECpfBlocked.Text := '';
+    ECpfBlocked.Visible := False;
+    FClienteCadastro.Visible := False;
+  end;
+end;
+
+// Responsável por carregar o cliente selecionado na grid
+procedure TFClienteCadastro.LoadClient(ACliente: TClienteEntity);
+begin
+  if Assigned(ACliente) then
+  begin
+    ECodigo.Text := ACliente.ID.ToString;
+    ENome.Text := ACliente.Nome;
+    ECpfBlocked.Text := ACliente.fFormatCpf(ACliente.Cpf);
+    EEndereco.Text := ACliente.Endereco;
+    ECidade.Text := ACliente.Cidade;
+    CBUf.Text := ACliente.Estado;
+
+    MECpf.Visible := False;
+    ECpfBlocked.Visible := True;
+    BExcluir.Visible := True;
+  end
+  else
+  begin
+    pClearFields;
+  end;
+end;
+
+// Responsável por cadastrar ou atualizar o cliente
+procedure TFClienteCadastro.onClickSalvar(Sender: TObject);
+var
+  LCliente: TClienteEntity;
+  IClienteExists: Integer;
+  DialogResult: TModalResult;
+begin
+  LCliente := TClienteEntity.Create;
+
+  try
+    if ECodigo.Text = '0' then
+    begin
+      LCliente.pValidaCampos(ENome.Text, EEndereco.Text, ECidade.Text);
+      IClienteExists := FClienteRepository.GetCpfByCliente(MECpf.Text);
+
+      if IClienteExists > 0 then
+      begin
+        ShowMessageError('CPF já está cadastrado!');
+        Exit;
+      end;
+
+      if not LCliente.fValidaCpf(MECpf.Text) then
+      begin
+        ShowMessageError('CPF informado é inválido!');
+        Exit;
+      end;
+
+      LCliente.Nome := ENome.Text;
+      LCliente.CPF := LCliente.fReplaceCpf(MECpf.Text);
+      LCliente.Endereco := EEndereco.Text;
+      LCliente.Cidade := ECidade.Text;
+      LCliente.Estado := CBUf.Text;
+
+      FClienteRepository.Add(LCliente);
+      ShowMessageInfo('Cliente salvo com sucesso!');
+      pClearFields;
+    end
+    else
+    begin
+      DialogResult := MessageDlg(
+        'Tem certeza que deseja atualizar o cliente?',
+        mtConfirmation,
+        [mbYes, mbNo],
+        0
+      );
+
+      if DialogResult = mrYes then
+      begin
+        LCliente.pValidaCampos(ENome.Text, EEndereco.Text, ECidade.Text);
+
+        LCliente.ID := vtInteger.Parse(ECodigo.Text);
+        LCliente.Nome := ENome.Text;
+        LCliente.Endereco := EEndereco.Text;
+        LCliente.Cidade := ECidade.Text;
+        LCliente.Estado := CBUf.Text;
+
+        FClienteRepository.Update(LCliente);
+        ShowMessageInfo('Cliente atualizado com sucesso!');
+        pClearFields;
+        FClienteCadastro.Visible := False;
+      end
+      else
+      begin
+        ShowMessageInfo('Processo de atualização foi cancelada!');
+      end;
+    end;
+  finally
+    LCliente.Free;
+  end;
+end;
+
+procedure TFClienteCadastro.onFormCreate(Sender: TObject);
+begin
+  FClienteRepository := TClienteRepository.Create;
+  ECpfBlocked.Visible := False;
+  BExcluir.Visible := False;
+
+  CBUf.Items.Add('AC');
+  CBUf.Items.Add('AL');
+  CBUf.Items.Add('AP');
+  CBUf.Items.Add('AM');
+  CBUf.Items.Add('BA');
+  CBUf.Items.Add('CE');
+  CBUf.Items.Add('DF');
+  CBUf.Items.Add('ES');
+  CBUf.Items.Add('GO');
+  CBUf.Items.Add('MA');
+  CBUf.Items.Add('MT');
+  CBUf.Items.Add('MS');
+  CBUf.Items.Add('MG');
+  CBUf.Items.Add('PA');
+  CBUf.Items.Add('PB');
+  CBUf.Items.Add('PR');
+  CBUf.Items.Add('PE');
+  CBUf.Items.Add('PI');
+  CBUf.Items.Add('RJ');
+  CBUf.Items.Add('RN');
+  CBUf.Items.Add('RS');
+  CBUf.Items.Add('RO');
+  CBUf.Items.Add('RR');
+  CBUf.Items.Add('SC');
+  CBUf.Items.Add('SP');
+  CBUf.Items.Add('SE');
+  CBUf.Items.Add('TO');
+
+  pClearFields;
+end;
+
+procedure TFClienteCadastro.onFormDestroy(Sender: TObject);
+begin
+  FClienteRepository := nil;
+end;
+
+end.

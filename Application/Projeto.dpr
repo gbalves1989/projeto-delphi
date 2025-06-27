@@ -1,0 +1,25 @@
+program Projeto;
+
+uses
+  Vcl.Forms,
+  UFirebirdConnection in '..\Firebird\Config\UFirebirdConnection.pas',
+  UClienteEntity in '..\Entities\UClienteEntity.pas',
+  UClienteInterface in '..\Interfaces\UClienteInterface.pas',
+  UClienteRepository in '..\Repositories\UClienteRepository.pas',
+  UMenuPrincipal in '..\UI\Home\UMenuPrincipal.pas' {FMenuPrincipal},
+  UClienteCadastro in '..\UI\Cliente\UClienteCadastro.pas' {FClienteCadastro},
+  UClienteConsulta in '..\UI\Cliente\UClienteConsulta.pas' {FClienteConsulta},
+  UMessageUtils in '..\Utils\UMessageUtils.pas',
+  ReportConnection in '..\Firebird\ReportConnection.pas' {DataModule1: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFMenuPrincipal, FMenuPrincipal);
+  Application.CreateForm(TFClienteCadastro, FClienteCadastro);
+  Application.CreateForm(TFClienteConsulta, FClienteConsulta);
+  Application.CreateForm(TDataModule1, DataModule1);
+  Application.Run;
+end.
